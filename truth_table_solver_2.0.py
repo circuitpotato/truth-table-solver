@@ -1,3 +1,9 @@
+# Visit downtothecircuits.com for more information
+# Code by: circuit_potato
+
+# Truth Table Solver 2.0: This program takes in the outputs of an N input truth table and simplifies the boolean expression
+# The simplified boolean expression is then expressed in Verilog/VHDL Syntax. The program runs on a GUI on Tkinter
+
 from tkinter import Tk, Label, Button, Entry, Canvas, Scrollbar, Frame, messagebox
 from sympy import simplify_logic, sympify
 
@@ -276,9 +282,10 @@ def copy_to_clipboard(text):
 
 # main code
 root = Tk()
+root.title("Truth Table GURU 2.0 :)")
 
 # Show truth table inputs GUI (inputs)
-number_label = Label(root, text=f"No. of Truth Table (+ve integers only):", padx=10, pady=5)
+number_label = Label(root, text=f"No. of Truth Table Inputs (+ve integers only):", padx=10, pady=5)
 number_label.grid(row=0, column=0, sticky="nsew")
 number_entry = Entry(root)
 number_entry.grid(row=0, column=1, padx=10, pady=5, sticky="nsew")
