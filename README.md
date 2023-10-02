@@ -1,6 +1,6 @@
 # truth_table_solver.py
 ### Introduction:
-1. Visit https://downtothecircuits.com/?p=2677 for more information
+1. Visit https://downtothecircuits.com/?p=2677 for more information (currently on maintenance)
 2. This python program solves a truth table based on user input from the python terminal. 
 
 ### Packages used: 
