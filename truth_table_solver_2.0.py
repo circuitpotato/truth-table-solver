@@ -42,22 +42,34 @@ def button2_pressed():
     get_vhdl_output(my_simplified_expression)
 
 
+def has_repeated_letters(input_string):
+    seen_letters = set()
+
+    for char in input_string.lower():  # Convert to lowercase
+        if char in seen_letters:
+            return True
+        seen_letters.add(char)
+
+    return False
+
+
 def get_inputs():
     global truth_table_input, truth_table_symbols, button_values
 
     # get inputs from user
     input_value = number_entry.get()
     symbols_value = string_entry.get()
+    repeated_letters_check = has_repeated_letters(symbols_value)
 
     # Validate the user input
-    if (input_value.isnumeric() and 2 <= int(input_value) <= truth_table_input_max) and (symbols_value.isalpha() == 1) and (len(set(symbols_value)) == len(symbols_value)) and (len(symbols_value) == int(input_value)):
+    if (repeated_letters_check is False and  input_value.isnumeric() and 2 <= int(input_value) <= truth_table_input_max) and (symbols_value.isalpha() == 1) and (len(set(symbols_value)) == len(symbols_value)) and (len(symbols_value) == int(input_value)):
         truth_table_input = int(input_value)  # save values into global variables
         truth_table_symbols = symbols_value
         print_truth_table(truth_table_input, truth_table_symbols)
         button_values = create_toggle_buttons(truth_table_input)
 
     else:
-        messagebox.showerror("Error", "Invalid input! \na) Truth Table Inputs: Enter a number between 2 to " + str(truth_table_input_max) + " \nb) Truth Table Symbols: Enter with respect to the number of inputs (E.g. ABCD, DCBA, aAc, cba)")
+        messagebox.showerror("Error", "Invalid input! \na) Truth Table Inputs: Enter a number between 2 to " + str(truth_table_input_max) + " \nb) Truth Table Symbols: Enter with respect to the number of inputs (E.g. ABCD, DCBA, ac, cba)")
 
 
 def print_truth_table(tt_inputs, tt_symbols):
@@ -163,7 +175,6 @@ def replace_letters_with_lowercase(input_string):
 
 
 def invert_case_of_replaced_letters(input_string, letters_to_check):
-    print(letters_to_check)
     for char in input_string:
         if char in letters_to_check:
             inverted_char = char.upper()
@@ -321,7 +332,7 @@ number_entry = Entry(root)
 number_entry.grid(row=0, column=1, padx=10, pady=5, sticky="nsew")
 
 # Show truth table symbols GUI (inputs)
-string_label = Label(root, text=f"Truth Table Symbols (E.g. ABCD, DCBA, aAc, cba): ", padx=10, pady=5)
+string_label = Label(root, text=f"Truth Table Symbols (E.g. ABCD, DCBA, ac, cba): ", padx=10, pady=5)
 string_label.grid(row=1, column=0, sticky="nsew")
 string_entry = Entry(root)
 string_entry.grid(row=1, column=1, padx=10, pady=5, sticky="nsew")
