@@ -151,6 +151,27 @@ def split_string(sentence_str):
     return "\n".join(split_strings)  # Join the split strings using newline character
 
 
+def replace_letters_with_lowercase(input_string):
+    replaced_letters = []
+    for char in ['O', 'S', 'I', 'N', 'E', 'Q']:
+        if char in input_string:
+            replaced_letters.append(char)
+            input_string = input_string.replace(char, char.lower())
+
+    replaced_letters = [char.lower() for char in replaced_letters]
+    return input_string, replaced_letters
+
+
+def invert_case_of_replaced_letters(input_string, letters_to_check):
+    print(letters_to_check)
+    for char in input_string:
+        if char in letters_to_check:
+            inverted_char = char.upper()
+            input_string = input_string.replace(char, inverted_char)
+
+    return input_string
+
+
 # Simplify the boolean expression of truth table from SOP
 def get_simplified_expression(input_symbols, tt_inputs, tt_outputs):
     decimal_inputs = 2 ** (int(tt_inputs))
@@ -177,13 +198,19 @@ def get_simplified_expression(input_symbols, tt_inputs, tt_outputs):
                 sop_str_dont_care = sop_str_dont_care + " | " + sop_temp
     sop_str = sop_str[2:]  # remove first character of string
     sop_str_dont_care = sop_str_dont_care[2:]  # remove first character of string
+
+    sop_str, replaced_letters = replace_letters_with_lowercase(sop_str)
+    sop_str_dont_care, replaced_letters_dont_care = replace_letters_with_lowercase(sop_str_dont_care)
+
     expression = sympify(sop_str)
     simplified_expression = simplify_logic(expression)  # simplify expression
+
     if ("x" in tt_outputs) or ("X" in tt_outputs):
         expression_dont_care = sympify(sop_str_dont_care)
         simplified_expression_dont_care = simplify_logic(simplified_expression, dontcare=expression_dont_care)
         simplified_expression_dont_care = str(simplified_expression_dont_care)
         final_simplified_expression = simplified_expression_dont_care
+        final_simplified_expression = invert_case_of_replaced_letters(final_simplified_expression, replaced_letters_dont_care)
 
         # simplified equivalent dont care (title)
         simplified_label1 = Label(content_frame2, text=f"Simplified Boolean Expression dont care: ")
@@ -191,7 +218,7 @@ def get_simplified_expression(input_symbols, tt_inputs, tt_outputs):
         simplified_label1.configure(font=("Arial", font_size, "bold italic"), foreground="brown")
 
         # simplified equivalent dont care (output expression)
-        simplified_dont_care_output = f"Z = {simplified_expression_dont_care}"
+        simplified_dont_care_output = f"Z = {final_simplified_expression}"
         split_simplified_dont_care_output = split_string(simplified_dont_care_output)
         simplified_label2 = Label(content_frame2, text=split_simplified_dont_care_output, width=output_label_width, padx=10, pady=10, relief="solid")
         simplified_label2.grid(row=1, column=0, sticky="we")
@@ -204,6 +231,8 @@ def get_simplified_expression(input_symbols, tt_inputs, tt_outputs):
     else:
         simplified_expression = str(simplified_expression)
         final_simplified_expression = simplified_expression
+        final_simplified_expression = invert_case_of_replaced_letters(final_simplified_expression,
+                                                                      replaced_letters)
 
         # simplified equivalent (title)
         simplified_label1 = Label(content_frame2, text="Simplified Boolean Expression: ")
@@ -211,7 +240,7 @@ def get_simplified_expression(input_symbols, tt_inputs, tt_outputs):
         simplified_label1.configure(font=("Arial", font_size, "bold italic"), foreground="brown")
 
         # simplified equivalent (expression)
-        simplified_output = "Z = " + simplified_expression
+        simplified_output = "Z = " + final_simplified_expression
         split_simplified_output = split_string(simplified_output)
         simplified_label2 = Label(content_frame2, text=split_simplified_output, width=output_label_width, padx=10, pady=10, relief="solid")
         simplified_label2.grid(row=1, column=0, sticky="we")
@@ -220,6 +249,7 @@ def get_simplified_expression(input_symbols, tt_inputs, tt_outputs):
         # copy button
         simplified_copy_button = Button(content_frame2, text=f"copy", command=lambda: copy_to_clipboard(simplified_output), padx=button_padx, pady=button_pady)
         simplified_copy_button.grid(row=2, column=0, sticky="e")
+
     return final_simplified_expression
 
 
