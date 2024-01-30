@@ -7,6 +7,17 @@
 from sympy import simplify_logic, sympify
 
 
+def has_repeated_letters(input_string):
+    seen_letters = set()
+
+    for char in input_string.lower():  # Convert to lowercase
+        if char in seen_letters:
+            return True
+        seen_letters.add(char)
+
+    return False
+
+
 # Request for no. of inputs in truth table from user
 def get_truth_table_inputs():
     n = input("Enter the number of inputs to truth table (+ve integers only): ")  # no. of inputs to truth table
@@ -50,6 +61,26 @@ def get_truth_table_outputs(inputs_of_truth_table):
     return truth_table_outputs
 
 
+def replace_letters_with_lowercase(input_string):
+    replaced_letters = []
+    for char in ['O', 'S', 'I', 'N', 'E', 'Q']:
+        if char in input_string:
+            replaced_letters.append(char)
+            input_string = input_string.replace(char, char.lower())
+
+    replaced_letters = [char.lower() for char in replaced_letters]
+    return input_string, replaced_letters
+
+
+def invert_case_of_replaced_letters(input_string, letters_to_check):
+    for char in input_string:
+        if char in letters_to_check:
+            inverted_char = char.upper()
+            input_string = input_string.replace(char, inverted_char)
+
+    return input_string
+
+
 # Simplify the boolean expression of truth table from SOP
 def get_simplified_expression(input_symbols, tt_inputs, tt_outputs):
     decimal_inputs = 2 ** (int(tt_inputs))
@@ -76,6 +107,10 @@ def get_simplified_expression(input_symbols, tt_inputs, tt_outputs):
                 sop_str_dont_care = sop_str_dont_care + " | " + sop_temp
     sop_str = sop_str[2:]  # remove first character of string
     sop_str_dont_care = sop_str_dont_care[2:]  # remove first character of string
+
+    sop_str, replaced_letters = replace_letters_with_lowercase(sop_str)
+    sop_str_dont_care, replaced_letters_dont_care = replace_letters_with_lowercase(sop_str_dont_care)
+
     expression = sympify(sop_str)
     simplified_expression = simplify_logic(expression)  # simplify expression
     if ("x" in tt_outputs) or ("X" in tt_outputs):
@@ -83,11 +118,13 @@ def get_simplified_expression(input_symbols, tt_inputs, tt_outputs):
         simplified_expression_dont_care = simplify_logic(simplified_expression, dontcare=expression_dont_care)
         simplified_expression_dont_care = str(simplified_expression_dont_care)
         final_simplified_expression = simplified_expression_dont_care
-        print("Simplified Boolean Expression dont care: Z = " + simplified_expression_dont_care)
+        final_simplified_expression = invert_case_of_replaced_letters(final_simplified_expression, replaced_letters_dont_care)
+        print("Simplified Boolean Expression dont care: Z = " + final_simplified_expression)
     else:
         simplified_expression = str(simplified_expression)
         final_simplified_expression = simplified_expression
-        print("Simplified Boolean Expression: Z = " + simplified_expression)
+        final_simplified_expression = invert_case_of_replaced_letters(final_simplified_expression, replaced_letters)
+        print("Simplified Boolean Expression: Z = " + final_simplified_expression)
 
     return final_simplified_expression
 
