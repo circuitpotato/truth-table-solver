@@ -27,7 +27,7 @@
 2. run the program :) more user friendly than version 1 of truth table solver
 
 # To do List / Future Improvements
-1. I made some changes to truth_table_solver 2.0 to accomodate reserved symbols (O, S, I, N, E, Q) in SymPy --> basically these letters likely will create an error in version 1
+1. I made some changes to truth_table_solver 1.0 and 2.0 to accomodate reserved symbols (O, S, I, N, E, Q) in SymPy 
    - Some "reserved" symbols:
       - O: for big O notation
       - S: S class
